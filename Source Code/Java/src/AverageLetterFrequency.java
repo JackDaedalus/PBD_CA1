@@ -47,13 +47,24 @@ public class AverageLetterFrequency {
         
         job1.setJarByClass(AverageLetterFrequency.class);
         
+        // Set Up Mapper and Combiner
 		job1.setMapperClass(AverageLetterMapper.class);
 		job1.setCombinerClass(AverageLetterReducer.class);
-		job1.setReducerClass(AverageLetterReducer.class);
-        
 		job1.setMapOutputKeyClass(Text.class);
 		job1.setMapOutputValueClass(IntWritable.class);
 		
+		
+		// Set Up Partitioner
+		job1.setPartitionerClass(AverageLetterPartitioner.class);
+		
+		// Set Up Reducer
+		job1.setReducerClass(AverageLetterReducer.class);
+		
+		// Set number of reducer tasks
+		job1.setNumReduceTasks(2);
+        
+
+		// Input and Output format for data
 		job1.setOutputKeyClass(Text.class);
 		job1.setOutputValueClass(IntWritable.class);
 		
@@ -61,6 +72,8 @@ public class AverageLetterFrequency {
 		System.out.println("\n\nInput glob... args[0]: " + args[0] + "\n\n");
 		FileInputFormat.addInputPath(job1, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job1, new Path(args[1]));
+		
+		
 		
 		ControlledJob cJob1 = new ControlledJob(conf);
 		cJob1.setJob(job1);

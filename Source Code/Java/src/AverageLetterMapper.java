@@ -21,12 +21,13 @@ public class AverageLetterMapper extends Mapper<LongWritable, Text, Text, IntWri
 		String sRegex = "^\\p{L}";
 		HashMap<Character, Integer> charCountMap = new HashMap<Character, Integer>();
 		
-		//System.out.println("In CA1:AverageLetterFrequency Mapper now!");
+		System.out.println("In CA1:AverageLetterFrequency Mapper now!");
 		
 		
         for (String sInput : s.split(strSplit)) {
+        	LOG.info("Pre-screening for RegEx..: " + sInput);
 			if (sInput.length() > 0 && sInput.matches(sRegex)) {
-				
+				LOG.info("Post-screening for RegEx..: " + sInput);
 				// Convert Word to lower case
 				String strLCaseWord = sInput.toLowerCase();
 				
@@ -41,7 +42,9 @@ public class AverageLetterMapper extends Mapper<LongWritable, Text, Text, IntWri
 		        char ch = strLCaseWord.charAt(0);
 		            
 		        // Check that character is valid alpha character
+		        LOG.info("Pre-screening for Character.isLetter() Check..: " + ch);
 		        if (Character.isLetter(ch)) {
+		        		LOG.info("Pre-screening for Character.isLetter() Check..: " + ch);
 			            // if the character is already in the map, increment its count
 			            if (charCountMap.containsKey(ch)) {
 			                charCountMap.put(ch, charCountMap.get(ch) + 1);
@@ -67,8 +70,8 @@ public class AverageLetterMapper extends Mapper<LongWritable, Text, Text, IntWri
         	
         	// Do not count very infrequent 'strange' characters
         	
-        	//LOG.info("Mapper output key: " + sCharInWord);
-//          //LOG.info("Mapper output values: " + ichrCnt);
+        	LOG.info("Mapper output key: " + sCharInWord);
+            LOG.info("Mapper output values: " + ichrCnt);
         	
         	// Output from Mapper is the count of each character in the word
         	context.write(new Text(sCharInWord), new IntWritable(ichrCnt));

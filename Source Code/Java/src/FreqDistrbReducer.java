@@ -14,11 +14,14 @@ import org.apache.commons.logging.LogFactory;
 
 
 public class FreqDistrbReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
-	private static final Log LOG = LogFactory.getLog(FreqDistrbReducer.class);
-
-
+		private static final Log LOG = LogFactory.getLog(FreqDistrbReducer.class);
 	    private HashMap<Text, Integer> totals = new HashMap<Text, Integer>();
 	    private String strTotalLabel = "Total_Chars";
+	    private Text languageText;
+	    
+	    protected void setup(Context context) throws IOException, InterruptedException {
+	    	languageText = new Text(context.getConfiguration().get("language.text"));
+	    }
 
 	    public void reduce(Text key, Iterable<IntWritable> values, Context context) 
 	            throws IOException, InterruptedException {
@@ -47,12 +50,12 @@ public class FreqDistrbReducer extends Reducer<Text, IntWritable, Text, IntWrita
 	        	
 	        	if (sChkTotal.equals(strTotalLabel)){
 	        		
-	        		LOG.info("Still Working through key-value Hash-Map in Reducer: " + entry.getKey() + "-" + entry.getValue());
+	        		//LOG.info("Still Working through key-value Hash-Map in Reducer: " + entry.getKey() + "-" + entry.getValue());
 	        		
-	        		int iNewVal =  ((entry.getValue()) * 2);
+	        		//int iNewVal =  ((entry.getValue()) * 2);
 	        		iTotalCharsCnt = entry.getValue();
 	        		
-	        		LOG.info("Changed Totals Value to (x2): " + entry.getKey() + "-" + iNewVal);
+	        		//LOG.info("Changed Totals Value to (x2): " + entry.getKey() + "-" + iNewVal);
 	        		
 	        	}
 	            
@@ -63,17 +66,28 @@ public class FreqDistrbReducer extends Reducer<Text, IntWritable, Text, IntWrita
 	        	
 	        	LOG.info("Working through second for-loop - Total Chars is: " + iTotalCharsCnt);
 	        	
+	        	
 	        	//int iCalField = Math.round((entry2.getValue() / iTotalCharsCnt) * 100);
 	        	float iEnt = (entry2.getValue());
 	        	
 	        	float iCalField = ((iEnt) / iTotalCharsCnt);
 	        	
 	        	int iDistrb = (int) (iCalField * 10000);
-	        	
-	        	LOG.info("Working through second for-loop - Key-Value-Calc-Int: " + entry2.getKey()+ "-" + entry2.getValue() + "-" + iCalField + "-" + iDistrb);
 	        		        	
+	        	LOG.info("Working through second for-loop - Key-Value-Calc-Int: " + entry2.getKey()+ "-" + entry2.getValue() + "-" + iCalField + "-" + iDistrb);
+	        	
+
+	        	String sTxt1 = languageText.toString();
+	        	String sTxt2 = entry2.getKey().toString().trim();
+	        	String sTxt3 = sTxt1+sTxt2;
+	        	LOG.info("Working through second for-loop - Are we picking up Language Text (as String)?: " + sTxt3);
+	        	
+	        	Text keyText = new Text(sTxt3);
+	        	LOG.info("Working through second for-loop - Are we picking up Language Text (as Text)?: " + keyText); 
+	        			
 	            //context.write(entry2.getKey(), new IntWritable(entry2.getValue()));
-	        	context.write(entry2.getKey(), new IntWritable(iDistrb));
+	        	//context.write(entry2.getKey(), new IntWritable(iDistrb));
+	        	context.write(keyText, new IntWritable(iDistrb));
 	            
 	            
 	        }

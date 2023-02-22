@@ -17,7 +17,7 @@ public class AverageLetterReducer extends Reducer<Text, IntWritable, Text, IntWr
 	public void reduce(Text key, Iterable<IntWritable> values, Context context)
 			throws IOException, InterruptedException {
 		
-		System.out.println("In CA1: Feb 19 AverageLetterFrequency Reducer now!");
+		System.out.println("In CA1: Feb 22 AverageLetterFrequency Reducer now!");
 
 		
 		//System.out.println("Attempt to copy Reducer list input...");
@@ -64,7 +64,7 @@ public class AverageLetterReducer extends Reducer<Text, IntWritable, Text, IntWr
 	    //System.out.println("Successfull divide by Zero in Main Reducer Loop now!");
 	    
 	    // Write Reducer Output - ignore very infrequent characters
-		if (iChrCount > 20) {
+		if (iChrCount > 0) {
 			context.write(key, new IntWritable(iChrCount));
 		}
 	}

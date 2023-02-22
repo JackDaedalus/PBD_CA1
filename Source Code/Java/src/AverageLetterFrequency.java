@@ -1,5 +1,7 @@
 // Week Three Class Exercise - Average Word Length for each character using Counters
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -12,8 +14,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.ControlledJob;
 import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-//import org.springframework.data.hadoop.mapreduce.JobRunner;
-
 
 
 
@@ -22,7 +22,7 @@ public class AverageLetterFrequency {
 
 	public static void main(String[] args) throws Exception {
 		
-		System.out.println("Looking for Feb 18-5 CA1:AverageLetterFrequency Driver inputs...");
+		System.out.println("Looking for Feb 21-2 CA1:AverageLetterFrequency Driver inputs...");
 		
 		if (args.length != 2) {
 			System.err.println("Usage: AverageLetterFrequency <input path> <output path>");
@@ -30,8 +30,17 @@ public class AverageLetterFrequency {
 		
 		System.out.println("In the CA1:AverageLetterFrequency Driver now!");
 		
-        Configuration conf = new Configuration();
-        
+		// Set Up language from input command line glob
+		String cmdInputArg0 = args[0];
+		int iUndrScrIndex = cmdInputArg0.indexOf('_');
+		String strLang = cmdInputArg0.substring(iUndrScrIndex+1).trim();
+		strLang = strLang + '\t';
+		
+		// Check Parse of Input globs for language description
+		System.out.println("\n\nInput glob... args[0] - language substring is: " + strLang + "\n\n");
+		
+		
+        Configuration conf = new Configuration();     
         
         // Set up Job1
         Job job1 = Job.getInstance(conf, "AverageLetterFrequency");
@@ -48,6 +57,8 @@ public class AverageLetterFrequency {
 		job1.setOutputKeyClass(Text.class);
 		job1.setOutputValueClass(IntWritable.class);
 		
+		// Check Input globs
+		System.out.println("\n\nInput glob... args[0]: " + args[0] + "\n\n");
 		FileInputFormat.addInputPath(job1, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job1, new Path(args[1]));
 		
@@ -66,8 +77,13 @@ public class AverageLetterFrequency {
         job2.setOutputKeyClass(Text.class);
         job2.setOutputValueClass(IntWritable.class);
         
-        //ChainMapper.addMapper(job2, FreqDistrbMapper.class, LongWritable.class, Text.class, Text.class, IntWritable.class, conf);
-        //ChainReducer.setReducer(job2, FreqDistrbReducer.class, Text.class, IntWritable.class, Text.class, IntWritable.class, conf);
+        // Set a custom configuration property that will track the language
+        // being analysed for character frequency distribution in this 
+        // Map Reduce process
+        job2.getConfiguration().set("language.text", strLang);
+        
+        ChainMapper.addMapper(job2, FreqDistrbMapper.class, LongWritable.class, Text.class, Text.class, IntWritable.class, conf);
+        ChainReducer.setReducer(job2, FreqDistrbReducer.class, Text.class, IntWritable.class, Text.class, IntWritable.class, conf);
 
         FileInputFormat.addInputPath(job2, new Path(args[1]));
         FileOutputFormat.setOutputPath(job2, new Path(args[1]+ "_out"));
@@ -79,13 +95,24 @@ public class AverageLetterFrequency {
         // Set up Job sequence execution
         Job[] jobs = new Job[]{job1, job2};
         for (Job job : jobs) {
-          boolean success = job.waitForCompletion(true);
+          boolean success = job.waitForCompletion(true);       
+          
+          // Exit process if one of the jobs fails
           if (!success) {
             System.exit(1);
           }
+          
         }
+        
+        // Add language description to the final output from the 
+        // Reducer job after it has completed.
+        
+        System.out.println("\nPreparing to end Driver process...\n");           
+              
+        // No jobs have failed - exit process successfully 
         System.exit(0);
-       
+
+        
 //		JobControl jobctrl = new JobControl("jobctrl");
 //		jobctrl.addJob(cJob1);
 //		jobctrl.addJob(cJob2);

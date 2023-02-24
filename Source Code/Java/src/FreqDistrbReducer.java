@@ -87,8 +87,12 @@ public class FreqDistrbReducer extends Reducer<Text, IntWritable, Text, IntWrita
 	        			
 	            //context.write(entry2.getKey(), new IntWritable(entry2.getValue()));
 	        	//context.write(entry2.getKey(), new IntWritable(iDistrb));
-	        	context.write(keyText, new IntWritable(iDistrb));
-	            
+	        	
+	        	// If character is very infrequent it can be ignored as a spurious 
+	        	// inclusion in the language documents
+	        	if (iDistrb > 10) { // Appears less that 0.01%
+	        		context.write(keyText, new IntWritable(iDistrb));
+	        	}
 	            
 	        }
 	    }

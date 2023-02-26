@@ -13,12 +13,12 @@ ls ~/shared -l
 echo " "
 echo "Copy Gutenberg book file from Host..."
 echo " "
-sudo cp ~/shared/Il_Diavolo.txt Il_Diavolo_Italian
-sudo cp ~/shared/Die_Postgeheimnisse.txt Die_Postgeheimnisse_German
-sudo cp ~/shared/DivinaCommedia.txt DivinaCommedia_Italian
-sudo cp ~/shared/Don_Quijote.txt Don_Quijote_Spanish
-sudo cp ~/shared/Goethe_Biographie.txt Goethe_Biographie_German
-sudo cp ~/shared/La_isla_del_tesoro.txt La_isla_del_tesoro_Spanish
+sudo cp ~/shared/Il_Diavolo.txt 			Il_Diavolo_Italian
+sudo cp ~/shared/Die_Postgeheimnisse.txt 	Die_Postgeheimnisse_German
+sudo cp ~/shared/DivinaCommedia.txt 		DivinaCommedia_Italian
+sudo cp ~/shared/Don_Quijote.txt 			Don_Quijote_Spanish
+sudo cp ~/shared/Goethe_Biographie.txt 		Goethe_Biographie_German
+sudo cp ~/shared/La_isla_del_tesoro.txt 	La_isla_del_tesoro_Spanish
 echo " "
 
 echo " "

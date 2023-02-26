@@ -24,22 +24,16 @@ public class AverageLetterPartitioner extends Partitioner<Text, IntWritable>{
 		if(numPartitions == 2){
 			String partitionKey = key.toString();
 			
-			LOG.info("numPars: 2 - Partitioner input key (as String): " + partitionKey);
-			LOG.info("numPars: 2 - Partitioner input key (as Char(0)): " + partitionKey.charAt(0));
-			
 			// Compare input key character against vowel string
-			//if (partitionKey.charAt(0) > 'a')
 			if (vowelCharsToMatch.contains(String.valueOf(partitionKey.charAt(0)))){
-				LOG.info("numPars: 2 - Partition 0");
-				return 0;
+				LOG.info("numPars: 2 - Partition 0"); // Send Output to Log to indicate Partitioner is working 
+				return 0; // Partition 0 will be used for vowels
 			}
 			else {
-				LOG.info("numPars: 2 - Partition 1");
-				return 1;
+				LOG.info("numPars: 2 - Partition 1"); // Send Output to Log to indicate Partitioner is working 
+				return 1; // Partition 1 will be used for non-vowels
 			}
-		} else if (numPartitions == 1) {
-			
-			LOG.info("numPars: 1 - Partitioner input key: " + key.toString());
+		} else if (numPartitions == 1) { // Default
 			return 0;
 		}
 		else {

@@ -13,13 +13,13 @@ ls ~/shared -l
 echo " "
 echo "Copy file 1 to Host..."
 echo " "
-sudo cp hadoop-common-2.2.0.jar ~/shared/hadoop-common-2.2.0.jar 
+sudo cp dsLanguageFreqOne.txt ~/shared/ouput/dsLanguageFreqOne.txt
 echo " "
 
 echo " "
 echo "Copy file 2 to Host..."
 echo " "
-sudo cp hadoop-mapreduce-client-core-2.2.0.jar ~/shared/hadoop-mapreduce-client-core-2.2.0.jar
+# sudo cp hadoop-mapreduce-client-core-2.2.0.jar ~/shared/hadoop-mapreduce-client-core-2.2.0.jar
 echo " "
 
 echo "List content of external drive on Host after copy..."

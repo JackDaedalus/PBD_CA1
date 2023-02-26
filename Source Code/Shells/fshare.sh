@@ -11,6 +11,11 @@ echo " "
 ls -l
 
 echo " "
+echo "Create shared directory..."
+echo " "
+# mkdir ~/shared
+
+echo " "
 echo "Set up share to external drive on Host..."
 echo " "
 sudo mount -t vboxsf Shared ~/shared
